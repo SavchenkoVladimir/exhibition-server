@@ -20,6 +20,7 @@ class Authenticate {
                     // create a token
                     var token = jwt.sign(user, app.get('superSecret'), {
                         expiresIn: 1440 // expires in 24 hours
+//                        algorithm: 'RS384'// Assign encoding algorithm
                     });
                     // return the information including token as JSON
                     res.json({

@@ -6,6 +6,7 @@ var morgan = require('morgan');
 var restful = require('node-restful');
 var cors = require('cors');
 var mongoose = restful.mongoose;
+var debug = require('debug')('http');
 
 var apiRoutes = express.Router();
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
+app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 app.use(methodOverride());
 
 mongoose.connect(config.database);
@@ -27,14 +29,19 @@ var db = mongoose.connection;
 app.set('superSecret', config.secret);
 
 // Set auth middleware
-var auth = new AuthMiddleware.auth;
-auth.authApply(apiRoutes, jwt, app);
-app.use('/app', apiRoutes);
+//var auth = new AuthMiddleware.auth;
+//auth.authApply(apiRoutes, jwt, app);
+//app.use('/app', apiRoutes);
 
 var beforeRequestToResource = function (req, res, next) {
-    app.resource.find(function (err, data) {
-        res.send(`${data} Executed before get records.`);
-    });
+    if (req.query.limit) {
+        req.query.limit = Math.abs(req.query.limit);
+    }
+    if (req.query.skip) {
+        req.query.skip = Math.abs(req.query.skip);
+    }
+    console.log(req.query);
+    next();
 };
 
 var Resource = app.resource = restful.model('quizResult', mongoose.Schema({
@@ -45,11 +52,11 @@ var Resource = app.resource = restful.model('quizResult', mongoose.Schema({
     },
     email: String,
     goal: String,
-    blankId: String
+    blankId: String,
+    location: String
 })).methods(['get', 'post', 'delete', {
-        method: 'get', // specify the method that will be bind to handler function
-        before: beforeRequestToResource // specify the handler function that will be hanged on the specified method before execution
-//                                      // as an example verify auth token
+        method: 'get',
+        before: beforeRequestToResource
 //        after: sendEmail, // specify the handler function that will be hanged on the specified method after execution
     }
 ]);
@@ -59,6 +66,9 @@ var Resource = app.resource = restful.model('quizResult', mongoose.Schema({
 Resource.route('quizResults', {
     detail: true,
     handler: function (req, res, next) {
+        console.log(req);
+        console.log(res);
+        console.log(next);
         // We can verify auth credentials here by read cookies or  o-auth headers
     }
 });
@@ -68,9 +78,9 @@ Resource.register(app, '/app/quizResults');
 //// This is a test route. It is used only to generate a test user.
 //app.get('/setup', function (req, res) {
 //    var nick = new User({
-//        name: 'Nick',
-//        password: 'password',
-//        admin: true
+//        name: 'Joe',
+//        password: 'pwd',
+//        role: 'user'
 //    });
 //    nick.save(function (err) {
 //        if (err)
