@@ -25,7 +25,7 @@ class Authenticate {
                     // return the information including token as JSON
                     res.json({
                         success: true,
-                        message: 'Enjoy your token!',
+                        message: 'Allowed',
                         token: token
                     });
                 }

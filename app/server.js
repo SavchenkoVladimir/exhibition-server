@@ -78,9 +78,9 @@ Resource.register(app, '/app/quizResults');
 //// This is a test route. It is used only to generate a test user.
 //app.get('/setup', function (req, res) {
 //    var nick = new User({
-//        name: 'Joe',
+//        name: 'Nick',
 //        password: 'pwd',
-//        role: 'user'
+//        role: 'admin'
 //    });
 //    nick.save(function (err) {
 //        if (err)
