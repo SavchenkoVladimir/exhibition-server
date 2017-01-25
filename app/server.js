@@ -54,7 +54,7 @@ var Resource = app.resource = restful.model('quizResult', mongoose.Schema({
     goal: String,
     blankId: String,
     location: String
-})).methods(['get', 'post', 'delete', {
+})).methods(['get', 'post', 'put', {
         method: 'get',
         before: beforeRequestToResource
 //        after: sendEmail, // specify the handler function that will be hanged on the specified method after execution
