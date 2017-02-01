@@ -15,6 +15,7 @@
         "jws": "~3.*",
         "jsonwebtoken": "~5.*",
         "cors": "^2.*",
-        "bson": "*"
+        "bson": "*",
+        "formidable": "1.1.1"
     }
 }

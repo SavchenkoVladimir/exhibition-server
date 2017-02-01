@@ -16,6 +16,10 @@ var authUser = require('./auth/Authenticate');
 var config = require('./config/config'); // get our config file
 var User = require('./models/User');
 
+var formidable = require('formidable');
+var fs = require('fs');
+var path = require("path");
+
 app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended': 'true'}));
@@ -74,6 +78,28 @@ Resource.route('quizResults', {
 });
 
 Resource.register(app, '/app/quizResults');
+
+app.post('/app/placeImage', function (req, res) {
+    var form = new formidable.IncomingForm();
+    form.multiples = false;
+    form.uploadDir = path.join(__dirname, '/public/uploads');
+
+    form.on('file', function (field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
+
+    form.on('error', function (err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+    form.on('end', function (err, fields, files) {
+        res.end('success');
+    });
+    
+    form.parse(req, function (err, fields, files) {
+        console.log(fields);
+    });
+});
 
 //// This is a test route. It is used only to generate a test user.
 //app.get('/setup', function (req, res) {
