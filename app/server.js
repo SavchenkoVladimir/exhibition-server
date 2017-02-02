@@ -95,10 +95,8 @@ app.post('/app/placeImage', function (req, res) {
     form.on('end', function (err, fields, files) {
         res.end('success');
     });
-    
-    form.parse(req, function (err, fields, files) {
-        console.log(fields);
-    });
+
+    form.parse(req, function (err, fields, files) { });
 });
 
 //// This is a test route. It is used only to generate a test user.
