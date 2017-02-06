@@ -12,14 +12,10 @@ var apiRoutes = express.Router();
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var AuthMiddleware = require('./auth/AuthMiddlevare');
 var authUser = require('./auth/Authenticate');
-var cardsService = require('./businessCardsService/businessCardsService');
+var imageFormHandlers = require('./formHandlers/imageFormHandler');
 
 var config = require('./config/config'); // get our config file
 var User = require('./models/User');
-
-var formidable = require('formidable');
-var fs = require('fs');
-var path = require("path");
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -81,33 +77,8 @@ Resource.route('quizResults', {
 Resource.register(app, '/app/quizResults');
 
 app.post('/app/placeImage', function (req, res) {
-    
-    
-    var form = new formidable.IncomingForm();
-    form.multiples = false;
-    form.uploadDir = path.join(__dirname, '/public/uploads');
-
-    form.parse(req, function (err, fields, files) { });
-
-    form.on('file', function (field, file) {
-
-        fs.rename(file.path, path.join(form.uploadDir, file.name));
-
-        let businessCardsService = new cardsService.businessCardsService;
-        businessCardsService.serviceRun(file.name);
-    });
-
-    form.on('error', function (err) {
-        console.log('An error has occured: \n' + err);
-    });
-
-    form.on('end', function (err, fields, files) {
-
-        // TODO: implement proper error handling 
-        err ? res.end('Image saving error.') : res.end('success');
-    });
-
-
+    let imageFormHandler = new imageFormHandlers.imageFormHandler;
+    imageFormHandler.handlingRun(req, res);
 });
 
 //// This is a test route. It is used only to generate a test user.
