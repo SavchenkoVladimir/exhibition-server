@@ -12,6 +12,7 @@ var apiRoutes = express.Router();
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var AuthMiddleware = require('./auth/AuthMiddlevare');
 var authUser = require('./auth/Authenticate');
+var cardsService = require('./businessCardsService/businessCardsService');
 
 var config = require('./config/config'); // get our config file
 var User = require('./models/User');
@@ -80,12 +81,20 @@ Resource.route('quizResults', {
 Resource.register(app, '/app/quizResults');
 
 app.post('/app/placeImage', function (req, res) {
+    
+    
     var form = new formidable.IncomingForm();
     form.multiples = false;
     form.uploadDir = path.join(__dirname, '/public/uploads');
 
+    form.parse(req, function (err, fields, files) { });
+
     form.on('file', function (field, file) {
+
         fs.rename(file.path, path.join(form.uploadDir, file.name));
+
+        let businessCardsService = new cardsService.businessCardsService;
+        businessCardsService.serviceRun(file.name);
     });
 
     form.on('error', function (err) {
@@ -93,10 +102,12 @@ app.post('/app/placeImage', function (req, res) {
     });
 
     form.on('end', function (err, fields, files) {
-        res.end('success');
+
+        // TODO: implement proper error handling 
+        err ? res.end('Image saving error.') : res.end('success');
     });
 
-    form.parse(req, function (err, fields, files) { });
+
 });
 
 //// This is a test route. It is used only to generate a test user.

@@ -10,3 +10,7 @@ available by 'http://localhost:3000/app/<action_name>' address.
 
 This app works with MongoDB database. Its name is exhibition. You can find the DB backup
 in dbBackups folder.
+
+Possible business card recognition SDK's:
+    - OCR SDK;
+    - OCRDesk;
