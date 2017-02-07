@@ -9,12 +9,12 @@ class BusinessCardsService {
         let imagesDir = `${__dirname}/../public/uploads`;
         var curl = new Curl();
 
-        curl.setOpt(Curl.option.URL, 'http://cloud.ocrsdk.com/processBusinessCard?language=Russian&exportformat=xml');
+        curl.setOpt(Curl.option.URL, 'http://cloud.ocrsdk.com/processBusinessCard?exportformat=xml');
         curl.setOpt(Curl.option.USERNAME, config.abbyyAppName);
         curl.setOpt(Curl.option.PASSWORD, config.abbyyPwd);
         curl.setOpt(Curl.option.HTTPPOST, [
-//            {name: 'business-card', file: `${imagesDir + imageName}`, type: 'image/jpeg'},
-            {name: 'my_file', file: `${imagesDir}/1486372547940.jpeg`, type: 'image/jpeg'}
+            {name: 'business-card', file: `${imagesDir}/${imageName}`, type: 'image/jpeg'}
+//            {name: 'my_file', file: `${imagesDir}/stanford_kor_sm.jpg`, type: 'image/jpg'}
         ]);
 
         var getImageProcessingStatus = this.getImageProcessingStatus();
@@ -108,7 +108,7 @@ class BusinessCardsService {
                     const parsedResponce = parseXML(responceBody);
                     const processedImageData = parsedResponce.root.children[0].children;
                     const cleanedProcessedData = cleanProcessedData(processedImageData);
-
+console.log(cleanedProcessedData);
                     saveProcessedData(cleanedProcessedData);
                 }
 
