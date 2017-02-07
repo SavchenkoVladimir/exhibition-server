@@ -9,7 +9,7 @@ class BusinessCardsService {
         let imagesDir = `${__dirname}/../public/uploads`;
         var curl = new Curl();
 
-        curl.setOpt(Curl.option.URL, 'http://cloud.ocrsdk.com/processBusinessCard?language=Russian&exportformat=xml');//vCard
+        curl.setOpt(Curl.option.URL, 'http://cloud.ocrsdk.com/processBusinessCard?language=Russian&exportformat=xml');
         curl.setOpt(Curl.option.USERNAME, config.abbyyAppName);
         curl.setOpt(Curl.option.PASSWORD, config.abbyyPwd);
         curl.setOpt(Curl.option.HTTPPOST, [
@@ -20,7 +20,6 @@ class BusinessCardsService {
         var getImageProcessingStatus = this.getImageProcessingStatus();
 
         curl.on('end', function (statusCode, responceBody, headers) {
-
             if (responceBody) {
                 getImageProcessingStatus(responceBody);
             }
@@ -29,15 +28,10 @@ class BusinessCardsService {
         });
 
         curl.on('error', function (err) {
-            console.log(err);
             this.close();
         });
 
         curl.perform();
-    }
-
-    makeRequest() {
-
     }
 
     getImageProcessingStatus() {
@@ -48,12 +42,9 @@ class BusinessCardsService {
             let orderId = parsedResponseBody.root.children[0].attributes.id;
             let getResultLinkDelay = parsedResponseBody.root.children[0].attributes.estimatedProcessingTime * 1100;
 
-            setTimeout(function (orderId, estimatedProcessingTime) {
-                console.log(orderId);
-                console.log(estimatedProcessingTime);
-
+            setTimeout(function (orderId) {
                 getProcessedImageLink(orderId);
-            }, getResultLinkDelay, orderId, getResultLinkDelay);
+            }, getResultLinkDelay, orderId);
         };
     }
 
@@ -81,7 +72,6 @@ class BusinessCardsService {
             });
 
             curl.on('error', function (err) {
-                console.log(err);
                 this.close();
             });
 
@@ -94,8 +84,6 @@ class BusinessCardsService {
         return function (responceBody) {
             let parsedResponseBody = parseXML(responceBody);
             let prosessImageStatus = parsedResponseBody.root.children[0].attributes.status;
-
-            console.log(prosessImageStatus);
 
             if (prosessImageStatus === 'Completed') {
                 let url = parsedResponseBody.root.children[0].attributes.resultUrl;
@@ -116,7 +104,6 @@ class BusinessCardsService {
             curl.setOpt(Curl.option.URL, resultFileURL);
 
             curl.on('end', function (statusCode, responceBody, headers) {
-
                 if (responceBody) {
                     const parsedResponce = parseXML(responceBody);
                     const processedImageData = parsedResponce.root.children[0].children;
@@ -129,7 +116,6 @@ class BusinessCardsService {
             });
 
             curl.on('error', function (err) {
-                console.log(err);
                 this.close();
             });
 
@@ -145,12 +131,12 @@ class BusinessCardsService {
             for (let row = 0; row < rawProcessedData.length; row++) {
                 let field = {};
 
-                if (typeof rawProcessedData[i].attributes !== undefined) {
-                    field.fieldType = rawProcessedData[i].attributes.type;
+                if (typeof rawProcessedData[row].attributes !== undefined) {
+                    field.fieldType = rawProcessedData[row].attributes.type;
                 }
 
-                if (typeof rawProcessedData[i].children !== undefined) {
-                    field.fieldValue = rawProcessedData[i].children[0].content;
+                if (typeof rawProcessedData[row].children !== undefined) {
+                    field.fieldValue = rawProcessedData[row].children[0].content;
                 }
 
                 cleanedProcessedData.push(field);
