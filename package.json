@@ -16,6 +16,8 @@
         "jsonwebtoken": "~5.*",
         "cors": "^2.*",
         "bson": "*",
-        "formidable": "1.1.1"
+        "formidable": "1.1.1",
+        "node-libcurl": "1.0.0",
+        "xml-parser": "1.2.1"
     }
 }
