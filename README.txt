@@ -12,5 +12,10 @@ This app works with MongoDB database. Its name is exhibition. You can find the D
 in dbBackups folder.
 
 Possible business card recognition SDK's:
-    - OCR SDK;
-    - OCRDesk;
+    - ABBYY cloud OSR SDK: http://ocrsdk.com/documentation/quick-start/;
+    - FullContact service: https://portal.fullcontact.com/#/welcome;
+    
+To simulate ssl protocol and real domain use nGrok service. Visit https://ngrok.com/
+The nGroc tool archive is able to find in app/thirdPartyTools folder 
+to find out how to use it. You have to proper configure the localhost. 
+Since than the app will be available by ref similar to http://f23fcc90.ngrok.io 

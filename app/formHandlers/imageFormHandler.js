@@ -2,7 +2,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var path = require("path");
 
-var cardsService = require('../businessCardsService/businessCardsService');
+//var cardsService = require('../businessCardsService/ABBYBusinessCardsService');
+var cardsService = require('../businessCardsService/FullContactService');
 
 class ImageFormHandler{
 
