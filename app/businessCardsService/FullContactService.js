@@ -11,8 +11,8 @@ class FullContactService {
         curl.setOpt(Curl.option.URL, 'https://api.fullcontact.com/v2/cardReader?webhookUrl=http://efd1ceef.ngrok.io/fullContactPort&format=json');
         curl.setOpt('HTTPHEADER', [`X-FullContact-APIKey:${config.FullContactAPIKey}`]);
         curl.setOpt(Curl.option.HTTPPOST, [
-//            {name: 'front', file: `${imagesDir}/${imageName}`, type: 'image/jpeg'}
-            {name: 'front', file: `${imagesDir}/business-card-7.jpg`, type: 'image/jpg'}
+            {name: 'front', file: `${imagesDir}/${imageName}`, type: 'image/jpeg'}
+//            {name: 'front', file: `${imagesDir}/business-card-7.jpg`, type: 'image/jpg'}
         ]);
 
         // TODO: implement handling if responce status is not 200

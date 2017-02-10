@@ -19,6 +19,7 @@
         "formidable": "1.1.1",
         "node-libcurl": "1.0.0",
         "xml-parser": "1.2.1",
-        "google-cloud": "*"
+        "@google-cloud/vision": "0.8.0",
+        "@google-cloud/language": "0.8.0"
     }
 }

@@ -16,7 +16,7 @@ var imageFormHandlers = require('./app/formHandlers/imageFormHandler');
 
 var config = require('./app/config/config');
 var User = require('./app/models/User');
-var cardsService = require('./app/businessCardsService/FullContactService');
+//var cardsService = require('./app/businessCardsService/GoogleCloudService');
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -109,16 +109,16 @@ app.post('/authenticate', function (req, res) {
     authenticateUser.authUser(req, res, User, jwt, app);
 });
 
-app.post('/fullContactPort', function (req, res) {
-    let businessCardsService = new cardsService.businessCardsService;
-    let businessCardsSave = businessCardsService.saveProcessedData();
-    businessCardsSave(req.body);
-
-    console.log(req);
-    console.log(req.body);
-    console.log(req.body);
-    res.send('Action "publicImages" POST');
-});
+//app.post('/fullContactPort', function (req, res) {
+//    let businessCardsService = new cardsService.businessCardsService;
+//    let businessCardsSave = businessCardsService.saveProcessedData();
+//    businessCardsSave(req.body);
+//
+//    console.log(req);
+//    console.log(req.body);
+//    console.log(req.body);
+//    res.send('Action "publicImages" POST');
+//});
 
 app.listen(3000, function () {
     console.log(`Node-restfull is listening at http://0.0.0.0:3000`);
