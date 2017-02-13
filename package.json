@@ -20,6 +20,7 @@
         "node-libcurl": "1.0.0",
         "xml-parser": "1.2.1",
         "@google-cloud/vision": "0.8.0",
-        "@google-cloud/language": "0.8.0"
+        "@google-cloud/language": "0.8.0",
+        "aylien_textapi": "0.6.0"
     }
 }
