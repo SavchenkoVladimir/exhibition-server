@@ -5,9 +5,9 @@ var AYLIENTextAPI = require('aylien_textapi');
 
 class MSService {
 
-    serviceRun(imageName) {
+    serviceRun(imageName, res) {
         const extractBusinessCartData = this.extractBusinessCartData();
-        extractBusinessCartData(imageName);
+        extractBusinessCartData(imageName, res);
     }
 
     extractBusinessCartData() {
@@ -17,7 +17,7 @@ class MSService {
         let extractResponseText = this.extractResponseText();
         let normalizeCartText = this.normalizeCartText();
 
-        return function (imageName) {
+        return function (imageName, res) {
             curl.setOpt(Curl.option.URL, 'https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr?language=de');
             curl.setOpt('HTTPHEADER', [`Ocp-Apim-Subscription-Key:${config.MSAPIKey}`]);
             curl.setOpt(Curl.option.HTTPPOST, [
@@ -27,7 +27,7 @@ class MSService {
             curl.on('end', function (statusCode, responseText, headers) {
                 if (responseText) {
                     const businessCartText = extractResponseText(responseText);
-                    normalizeCartText(businessCartText);
+                    normalizeCartText(businessCartText, res);
                 }
 
                 this.close();
@@ -59,9 +59,6 @@ class MSService {
                     }
                 }
             }
-            
-            //Remove on prod
-            console.log(extractedBusinessCartText);
             return extractedBusinessCartText;
         };
     }
@@ -70,15 +67,14 @@ class MSService {
     normalizeCartText() {
         let saveBusinessCartData = this.saveBusinessCartData();
 
-        return function (cartText) {
-
+        return function (cartText, res) {
             var textApi = new AYLIENTextAPI({
                 application_id: config.aylienAppId,
                 application_key: config.aylienAPIKey
             });
             textApi.entities({'text': cartText}, function (error, response) {
                 if (error === null) {
-                    saveBusinessCartData(response);
+                    saveBusinessCartData(response, res);
                 }
             });
         };
@@ -87,17 +83,18 @@ class MSService {
     // TODO: implement the poleId
     saveBusinessCartData() {
 
-        return function (businessCartData) {
+        return function (businessCartData, res) {
             var buisnessCardDataModel = new BuisnessCardDataModel({
                 cardData: businessCartData,
                 poleId: 'Feature does not yet implemented.'
             });
 
             buisnessCardDataModel.save(function (err) {
-                if (err)
+                if (err) {
                     throw err;
-
-                console.log('Cart data saved successfully.');
+                }
+                
+                res.end(JSON.stringify(businessCartData));
             });
         };
     }
