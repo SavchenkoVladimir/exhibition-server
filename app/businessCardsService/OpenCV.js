@@ -1,43 +1,27 @@
-var Curl = require('node-libcurl').Curl;
-var config = require('../config/config');
 var BuisnessCardDataModel = require('../models/BuisnessCardData');
-var AYLIENTextAPI = require('aylien_textapi');
+var cv = require('opencv');
 
-class MSService {
+class OpenCV {
 
-    serviceRun(imageName, res) {
+    serviceRun(imageName) {
         const extractBusinessCartData = this.extractBusinessCartData();
-        extractBusinessCartData(imageName, res);
+        extractBusinessCartData(imageName);
     }
 
     extractBusinessCartData() {
-        var curl = new Curl();
         const imgDir = `${__dirname}/../public/uploads`;
 
-        let extractResponseText = this.extractResponseText();
-        let normalizeCartText = this.normalizeCartText();
-
-        return function (imageName, res) {
-            curl.setOpt(Curl.option.URL, 'https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr?language=de');
-            curl.setOpt('HTTPHEADER', [`Ocp-Apim-Subscription-Key:${config.MSAPIKey}`]);
-            curl.setOpt(Curl.option.HTTPPOST, [
-                {name: 'image', file: `${imgDir}/${imageName}`}
-            ]);
-
-            curl.on('end', function (statusCode, responseText, headers) {
-                if (responseText) {
-                    const businessCartText = extractResponseText(responseText);
-                    normalizeCartText(businessCartText, res);
-                }
-
-                this.close();
+        return function (imageName) {
+            cv.readImage(`${imgDir}/${imageName}`, function (err, im) {
+                im.detectObject(cv.FACE_CASCADE, {}, function (err, faces) {
+                    for (var i = 0; i < faces.length; i++) {
+                        var x = faces[i]
+                        im.ellipse(x.x + x.width / 2, x.y + x.height / 2, x.width / 2, x.height / 2);
+                    }
+//                    console.log(cv);
+                    im.save(`${imgDir}/out.jpg`);
+                });
             });
-
-            curl.on('error', function (err) {
-                this.close();
-            });
-
-            curl.perform();
         };
     }
 
@@ -93,7 +77,7 @@ class MSService {
                 if (err) {
                     throw err;
                 }
-                
+
                 res.end(JSON.stringify(businessCartData));
             });
         };
@@ -101,4 +85,46 @@ class MSService {
 
 }
 
-exports.businessCardsService = MSService;
+exports.businessCardsService = OpenCV;
+
+/**
+ * --   Python 3:
+ --     Interpreter:                 /home/daf/.virtualenvs/cv/bin/python3.4 (ver 3.4.3)
+ --     Libraries:                   /usr/lib/x86_64-linux-gnu/libpython3.4m.so (ver 3.4.3)
+ --     numpy:                       /home/daf/.virtualenvs/cv/lib/python3.4/site-packages/numpy/core/include (ver 1.12.0)
+ --     packages path:               lib/python3.4/site-packages
+ -- 
+ --   Python (for build):            /usr/bin/python2.7
+ -- 
+ --   Java:
+ --     ant:                         NO
+ --     JNI:                         /usr/lib/jvm/default-java/include /usr/lib/jvm/default-java/include /usr/lib/jvm/default-java/include
+ --     Java wrappers:               NO
+ --     Java tests:                  NO
+ -- 
+ --   Matlab:                        Matlab not found or implicitly disabled
+ -- 
+ --   Documentation:
+ --     Doxygen:                     NO
+ -- 
+ --   Tests and samples:
+ --     Tests:                       YES
+ --     Performance tests:           YES
+ --     C/C++ Examples:              YES
+ -- 
+ --   Install path:                  /usr/local
+ -- 
+ --   cvconfig.h is in:              /home/daf/opencv/build
+ -- -----------------------------------------------------------------
+ -- 
+ -- Configuring done
+ -- Generating done
+ -- Build files have been written to: /home/daf/opencv/build
+ cv2.cpython-34m.so
+
+
+git clone git@staging.aprimind.com:angular_test.git 
+origin git@staging.aprimind.com:ys.git
+ysadmin@admin.com
+
+ */

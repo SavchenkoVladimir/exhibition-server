@@ -7,6 +7,5 @@ module.exports = {
     'googleProjectID': '1026846243805',
     'MSAPIKey': '0cc54bb443644573a1b75aceccdfeac7', 
     'aylienAppId': '8566588d',
-    'aylienAPIKey': '6b8cbdc4a2bdc99ada941b23e11b1db5'
-    
+    'aylienAPIKey': '6b8cbdc4a2bdc99ada941b23e11b1db5'    
 };
